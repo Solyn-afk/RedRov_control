@@ -54,6 +54,22 @@ class Device:
         cmd.append(crc)
         return cmd
 
+def initialize_devices(ser, servos, peripherals):
+    # 初始化舵机到初始角度
+    for servo in servos.values():
+        cmd = servo.build_command()
+        #ser.write(bytes(cmd))
+        print(f"[初始化] 舵机{servo.servo_id} → 初始角度 {servo.init_angle}°，命令: {[hex(b) for b in cmd]}")
+
+        # 初始化水泵和照明灯（不包含DVL）
+    for p in peripherals:
+        if p['id'] != 0x07:  # 跳过DVL
+            cmd = [0xAA, p['id'], p['speed'], 0x00, 0x00]
+            crc = crc8_func(bytes(cmd))
+            cmd.append(crc)
+            #ser.write(bytes(cmd))
+            print(f"[初始化] {p['name']} → 初始转速 {p['speed']}，命令: {[hex(b) for b in cmd]}")
+
 # ================== 主窗口 ==================
 class ControlWindow(QMainWindow):
     def __init__(self):
@@ -208,6 +224,26 @@ class ControlWindow(QMainWindow):
 
 # ================== 主函数 ==================
 def main():
+    ser = serial.Serial("/dev/ttyUSB0", 115200)
+
+    # 舵机初始化
+    servos = {
+        1: Servo(1, init_angle=110, speed=20, step=5, angle_min=110, angle_max=260),
+        2: Servo(2, init_angle=130, speed=20, step=5, angle_min=85, angle_max=260),
+        3: Servo(3, init_angle=45, speed=35, step=5, angle_min=45, angle_max=260),
+        4: Servo(4, init_angle=110, speed=20, step=5, angle_min=110, angle_max=180)
+    }
+
+    # 外设初始化
+    peripherals = [
+        {'id': 0x05, 'name': '水泵', 'speed': 50},
+        {'id': 0x06, 'name': '照明灯', 'speed': 0},
+        {'id': 0x07, 'name': 'DVL', 'speed': 0}  # DVL不初始化
+    ]
+
+    # 初始化所有设备（除了DVL）
+    initialize_devices(ser, servos, peripherals)
+
     app = QApplication(sys.argv)
     window = ControlWindow()
     window.show()
