@@ -27,11 +27,11 @@ PROCESS_ACTIONS: Dict[str, List[Tuple[Dict[int, int], float]]] = {
         ({2: 85,  3:  45, 4: 110}, 3.0),#爪子闭合
         ({2: 260, 3:  45, 4: 110}, 2.0),#大臂回笼
         #甩干模式
-        ({2: 200, 3:  45, 4:  110}, 0.7),
-        ({2: 240, 3:  45, 4:  110}, 0.7),
-        ({2: 200, 3:  45, 4:  110}, 0.7),
-        ({2: 240, 3:  45, 4:  110}, 0.7),
-        ({2: 200, 3:  45, 4:  110}, 0.7),
+        ({2: 200, 3:  45, 4:  110}, 0.3),
+        ({2: 240, 3:  45, 4:  110}, 0.3),
+        ({2: 200, 3:  45, 4:  110}, 0.3),
+        ({2: 240, 3:  45, 4:  110}, 0.3),
+        ({2: 200, 3:  45, 4:  110}, 0.3),
         #进入观察模式
         ({2: 175, 3:  45,  4:  110}, 2),
         ({2: 175, 3:  260, 4: 180}, 0.5),
@@ -46,7 +46,7 @@ PROCESS_ACTIONS: Dict[str, List[Tuple[Dict[int, int], float]]] = {
 # 舵机初始参数（每个舵机都有独立角度限制）
 SERVOS_CONFIG = {
     1: dict(name="相机云台舵机1", init_angle=110, speed=20, step=5, angle_min=110, angle_max=260),
-    2: dict(name="机械臂大臂舵机2", init_angle=130, speed=20, step=5, angle_min=85, angle_max=260),
+    2: dict(name="机械臂大臂舵机2", init_angle=130, speed=30, step=5, angle_min=85, angle_max=260),
     3: dict(name="笼子开关舵机3", init_angle=45, speed=35, step=5, angle_min=45, angle_max=260),
     4: dict(name="爪子舵机4", init_angle=110, speed=20, step=5, angle_min=110, angle_max=180)
 }
